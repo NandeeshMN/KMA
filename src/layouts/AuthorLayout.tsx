@@ -1,41 +1,31 @@
 import { useState } from 'react';
-import { Outlet, NavLink, useNavigate, Navigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Bell, LogOut, X, Search, HelpCircle } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import SidebarHeader from '../../components/SidebarHeader';
-import GlobalHeader from '../../components/GlobalHeader';
-import GlobalFooter from '../../components/GlobalFooter';
-import ReportIssueModal from '../../components/ReportIssueModal';
-import ChangePasswordModal from '../../components/reviewer/ChangePasswordModal';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, FileEdit, BookOpen, Inbox, Bell, Search, LogOut, X, HelpCircle } from 'lucide-react';
+import { cn } from '../utils/cn';
+import SidebarHeader from '../components/SidebarHeader';
+import GlobalHeader from '../components/GlobalHeader';
+import GlobalFooter from '../components/GlobalFooter';
+import ReportIssueModal from '../components/ReportIssueModal';
 
-const ReviewerLayout = () => {
+const AuthorLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [mustChangePassword, setMustChangePassword] = useState(localStorage.getItem('is_temp_password') === 'true');
   const navigate = useNavigate();
 
-  // Route protection
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  const role = localStorage.getItem('role');
-
-  if (!isLoggedIn || role !== 'reviewer') {
-    return <Navigate to="/auth" replace />;
-  }
-
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('role');
+    // If author has any login state, clear it here
     navigate('/auth');
   };
-
   const navItems = [
-    { name: 'Dashboard', path: '/reviewer-dashboard', end: true, icon: LayoutDashboard },
-    { name: 'Assigned Articles', path: '/reviewer-dashboard/articles', icon: FileText },
-    { name: 'Notifications', path: '/reviewer-dashboard/notifications', icon: Bell, badge: 2 },
+    { name: 'Dashboard', path: '/author/dashboard', end: true, icon: LayoutDashboard },
+    { name: 'Submit Article', path: '/author/submit', icon: FileEdit },
+    { name: 'My Articles', path: '/author/articles', icon: BookOpen },
+    { name: 'Drafts', path: '/author/drafts', icon: Inbox },
+    { name: 'Notifications', path: '/author/notifications', icon: Bell, badge: 3 },
   ];
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 text-black font-['Outfit'] lg:pl-64">
+    <div className="flex min-h-screen bg-zinc-50 font-['Outfit'] lg:pl-64">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
@@ -50,7 +40,7 @@ const ReviewerLayout = () => {
         isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="relative">
-          <SidebarHeader portalName="Reviewer Portal" />
+          <SidebarHeader portalName="Author Portal" />
           <button 
             className="lg:hidden text-zinc-400 hover:text-white absolute right-4 top-1/2 -translate-y-1/2"
             onClick={() => setIsSidebarOpen(false)}
@@ -59,7 +49,7 @@ const ReviewerLayout = () => {
           </button>
         </div>
         
-        <nav className="flex-1 mt-6 lg:mt-8 space-y-2 px-4 overflow-y-auto">
+        <nav className="flex-1 mt-6 lg:mt-8 space-y-1 px-4 overflow-y-auto">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
@@ -94,8 +84,8 @@ const ReviewerLayout = () => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-zinc-800 mb-4 mt-auto">
-          {/* Help Button */}
+        <div className="p-4 mb-4 border-t border-zinc-800 mt-auto">
+          {/* Help Button - Now the main action in sidebar footer */}
           <button 
             onClick={() => setIsReportModalOpen(true)}
             className="flex items-center gap-3 px-4 py-3 w-full bg-zinc-900/50 hover:bg-zinc-800 text-zinc-300 hover:text-white rounded-lg text-sm font-medium transition-all mb-4 border border-white/5"
@@ -119,8 +109,8 @@ const ReviewerLayout = () => {
         {/* Global Header */}
         <GlobalHeader 
           onMenuClick={() => setIsSidebarOpen(true)} 
-          userName="Dr. John Doe"
-          userInitials="JD"
+          userName="Dr. Aris Thorne"
+          userInitials="AT"
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
@@ -134,7 +124,7 @@ const ReviewerLayout = () => {
         />
 
         {/* Page Content */}
-        <div className="pt-20 lg:pt-24 p-4 sm:p-6 lg:p-8 flex-1 w-full max-w-7xl mx-auto overflow-y-auto">
+        <div className="pt-20 lg:pt-24 p-4 sm:p-6 lg:p-10 flex-1 max-w-6xl mx-auto w-full overflow-y-auto">
           <Outlet />
         </div>
 
@@ -145,15 +135,10 @@ const ReviewerLayout = () => {
       <ReportIssueModal 
         isOpen={isReportModalOpen} 
         onClose={() => setIsReportModalOpen(false)} 
-        userRole="reviewer"
-      />
-
-      <ChangePasswordModal 
-        isOpen={mustChangePassword}
-        onSuccess={() => setMustChangePassword(false)}
+        userRole="author"
       />
     </div>
   );
 };
 
-export default ReviewerLayout;
+export default AuthorLayout;

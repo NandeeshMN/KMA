@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import logo from '../assets/logo.png';
 import { cn } from '../utils/cn';
-import GlobalFooter from './GlobalFooter';
+import GlobalFooter from '../components/GlobalFooter';
 
 // --- Types ---
 interface Article {

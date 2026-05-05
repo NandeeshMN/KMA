@@ -1,17 +1,17 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import AuthContainer from './components/AuthContainer'
-import LandingPage from './components/LandingPage'
-import AuthorLayout from './pages/author/AuthorLayout'
+import Auth from './pages/Auth'
+import LandingPage from './pages/LandingPage'
+import AuthorLayout from './layouts/AuthorLayout'
 import Dashboard from './pages/author/Dashboard'
 import MyArticles from './pages/author/MyArticles'
 import SubmitArticle from './pages/author/SubmitArticle'
 import Notifications from './pages/author/Notifications'
 import Drafts from './pages/author/Drafts'
-import AdminLayout from './pages/admin/AdminLayout'
+import AdminLayout from './layouts/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminAuthors from './pages/admin/AdminAuthors'
 import AdminArticles from './pages/admin/AdminArticles'
-import ReviewerLayout from './pages/reviewer/ReviewerLayout'
+import ReviewerLayout from './layouts/ReviewerLayout'
 import ReviewerDashboard from './pages/reviewer/ReviewerDashboard'
 import ReviewerArticles from './pages/reviewer/ReviewerArticles'
 import ReviewerNotifications from './pages/reviewer/ReviewerNotifications'
@@ -21,7 +21,7 @@ function App() {
     <div className="w-full min-h-screen">
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/auth" element={<AuthContainer />} />
+        <Route path="/auth" element={<Auth />} />
         
         {/* Author Portal Routes */}
         <Route path="/author" element={<AuthorLayout />}>

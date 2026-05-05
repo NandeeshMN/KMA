@@ -1,22 +1,24 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, LogOut, X, Search, HelpCircle } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import SidebarHeader from '../../components/SidebarHeader';
-import GlobalHeader from '../../components/GlobalHeader';
-import GlobalFooter from '../../components/GlobalFooter';
-import ReportIssueModal from '../../components/ReportIssueModal';
+import { LayoutDashboard, FileText, Bell, LogOut, X, Search, HelpCircle } from 'lucide-react';
+import { cn } from '../utils/cn';
+import SidebarHeader from '../components/SidebarHeader';
+import GlobalHeader from '../components/GlobalHeader';
+import GlobalFooter from '../components/GlobalFooter';
+import ReportIssueModal from '../components/ReportIssueModal';
+import ChangePasswordModal from '../components/reviewer/ChangePasswordModal';
 
-const AdminLayout = () => {
+const ReviewerLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [mustChangePassword, setMustChangePassword] = useState(localStorage.getItem('is_temp_password') === 'true');
   const navigate = useNavigate();
 
   // Route protection
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const role = localStorage.getItem('role');
 
-  if (!isLoggedIn || role !== 'admin') {
+  if (!isLoggedIn || role !== 'reviewer') {
     return <Navigate to="/auth" replace />;
   }
 
@@ -27,17 +29,17 @@ const AdminLayout = () => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/admin-dashboard', end: true, icon: LayoutDashboard },
-    { name: 'Reviewers', path: '/admin-dashboard/authors', icon: Users },
-    { name: 'Articles', path: '/admin-dashboard/articles', icon: FileText },
+    { name: 'Dashboard', path: '/reviewer-dashboard', end: true, icon: LayoutDashboard },
+    { name: 'Assigned Articles', path: '/reviewer-dashboard/articles', icon: FileText },
+    { name: 'Notifications', path: '/reviewer-dashboard/notifications', icon: Bell, badge: 2 },
   ];
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 font-['Outfit'] lg:pl-64">
+    <div className="flex min-h-screen bg-zinc-50 text-black font-['Outfit'] lg:pl-64">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden" 
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -48,15 +50,15 @@ const AdminLayout = () => {
         isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         <div className="relative">
-          <SidebarHeader portalName="Admin Portal" />
-          <button
+          <SidebarHeader portalName="Reviewer Portal" />
+          <button 
             className="lg:hidden text-zinc-400 hover:text-white absolute right-4 top-1/2 -translate-y-1/2"
             onClick={() => setIsSidebarOpen(false)}
           >
             <X size={24} />
           </button>
         </div>
-
+        
         <nav className="flex-1 mt-6 lg:mt-8 space-y-2 px-4 overflow-y-auto">
           {navItems.map((item) => (
             <NavLink
@@ -65,17 +67,24 @@ const AdminLayout = () => {
               end={item.end}
               className={({ isActive }) =>
                 cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 relative",
-                  isActive
-                    ? "bg-zinc-800/80 text-white shadow-lg ring-1 ring-white/10"
+                  "flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 relative",
+                  isActive 
+                    ? "bg-zinc-800/80 text-white shadow-lg ring-1 ring-white/10" 
                     : "text-zinc-400 hover:text-white hover:bg-zinc-900"
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  <item.icon size={18} />
-                  {item.name}
+                  <div className="flex items-center gap-3">
+                    <item.icon size={18} />
+                    {item.name}
+                  </div>
+                  {item.badge && (
+                    <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                      {item.badge}
+                    </span>
+                  )}
                   {isActive && (
                     <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
                   )}
@@ -85,7 +94,7 @@ const AdminLayout = () => {
           ))}
         </nav>
 
-        <div className="p-4 mb-4 border-t border-zinc-800 mt-auto">
+        <div className="p-4 border-t border-zinc-800 mb-4 mt-auto">
           {/* Help Button */}
           <button 
             onClick={() => setIsReportModalOpen(true)}
@@ -95,7 +104,7 @@ const AdminLayout = () => {
             Need Help?
           </button>
 
-          <button
+          <button 
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 w-full text-red-400 hover:text-red-300 hover:bg-zinc-900 rounded-lg text-sm font-medium transition-colors"
           >
@@ -110,8 +119,8 @@ const AdminLayout = () => {
         {/* Global Header */}
         <GlobalHeader 
           onMenuClick={() => setIsSidebarOpen(true)} 
-          userName="Admin Manager"
-          userInitials="AM"
+          userName="Dr. John Doe"
+          userInitials="JD"
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
@@ -125,7 +134,7 @@ const AdminLayout = () => {
         />
 
         {/* Page Content */}
-        <div className="pt-20 lg:pt-24 p-4 sm:p-6 lg:p-8 flex-1 w-full overflow-y-auto">
+        <div className="pt-20 lg:pt-24 p-4 sm:p-6 lg:p-8 flex-1 w-full max-w-7xl mx-auto overflow-y-auto">
           <Outlet />
         </div>
 
@@ -136,10 +145,15 @@ const AdminLayout = () => {
       <ReportIssueModal 
         isOpen={isReportModalOpen} 
         onClose={() => setIsReportModalOpen(false)} 
-        userRole="admin"
+        userRole="reviewer"
+      />
+
+      <ChangePasswordModal 
+        isOpen={mustChangePassword}
+        onSuccess={() => setMustChangePassword(false)}
       />
     </div>
   );
 };
 
-export default AdminLayout;
+export default ReviewerLayout;

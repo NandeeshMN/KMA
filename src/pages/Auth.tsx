@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import BrandingCard from './BrandingCard';
-import RegistrationForm from './RegistrationForm';
-import LoginForm from './LoginForm';
+import BrandingCard from '../components/BrandingCard';
+import RegistrationForm from '../components/RegistrationForm';
+import LoginForm from '../components/LoginForm';
 
-const AuthContainer: React.FC = () => {
+const Auth: React.FC = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [prefilledEmail, setPrefilledEmail] = useState('');
 
@@ -98,4 +98,4 @@ const AuthContainer: React.FC = () => {
   );
 };
 
-export default AuthContainer;
+export default Auth;

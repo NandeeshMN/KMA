@@ -59,7 +59,11 @@ export const useProfile = () => {
       window.dispatchEvent(new StorageEvent('storage', { key: `profile_${newData.email}` }));
       
       return { success: true };
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+        console.error('Storage quota exceeded');
+        return { success: false, error: 'Image is too large for local storage. Please use a smaller file (< 3MB).' };
+      }
       console.error('Failed to update profile:', error);
       return { success: false };
     }

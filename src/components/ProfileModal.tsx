@@ -42,8 +42,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('Image size should be less than 2MB', 'error');
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('Image size should be less than 10MB', 'error');
         return;
       }
       const reader = new FileReader();
@@ -77,7 +77,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
       showToast('Profile updated successfully', 'success');
       setIsEditing(false);
     } else {
-      showToast('Failed to update profile', 'error');
+      showToast(result.error || 'Failed to update profile', 'error');
     }
   };
 

@@ -108,7 +108,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
         <div className="relative z-10 p-8 pt-12 flex flex-col items-center">
           {/* Profile Image Section */}
           <div className="relative group mb-6">
-            <div className="w-32 h-32 rounded-3xl bg-zinc-800 border-4 border-zinc-900 overflow-hidden shadow-2xl flex items-center justify-center">
+            <div className="w-32 h-32 rounded-full bg-zinc-800 border-4 border-zinc-900 overflow-hidden shadow-2xl flex items-center justify-center">
               {previewImage ? (
                 <img src={previewImage} alt="Profile" className="w-full h-full object-cover" />
               ) : (
@@ -119,7 +119,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
             {isEditing && (
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all active:scale-90"
+                className="absolute bottom-1 right-1 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all active:scale-90 border-4 border-zinc-900"
               >
                 <Camera size={18} />
               </button>

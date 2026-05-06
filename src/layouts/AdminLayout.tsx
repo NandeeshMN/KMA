@@ -6,8 +6,10 @@ import SidebarHeader from '../components/SidebarHeader';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
+import { useNotification } from '../utils/NotificationContext';
 
 const AdminLayout = () => {
+  const { confirm, showToast } = useNotification();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -21,9 +23,17 @@ const AdminLayout = () => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('role');
-    navigate('/auth');
+    confirm({
+      title: 'Confirm Logout',
+      message: 'Are you sure you want to log out of the Admin Portal?',
+      confirmText: 'Logout',
+      onConfirm: () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('role');
+        showToast('Logged out successfully', 'success');
+        navigate('/auth');
+      }
+    });
   };
 
   const navItems = [

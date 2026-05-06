@@ -6,15 +6,26 @@ import SidebarHeader from '../components/SidebarHeader';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
+import { useNotification } from '../utils/NotificationContext';
 
 const AuthorLayout = () => {
+  const { confirm, showToast } = useNotification();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // If author has any login state, clear it here
-    navigate('/auth');
+    confirm({
+      title: 'Confirm Logout',
+      message: 'Are you sure you want to log out of the Author Portal?',
+      confirmText: 'Logout',
+      onConfirm: () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('role');
+        showToast('Logged out successfully', 'success');
+        navigate('/auth');
+      }
+    });
   };
   const navItems = [
     { name: 'Dashboard', path: '/author/dashboard', end: true, icon: LayoutDashboard },

@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Auth from './pages/Auth'
 import LandingPage from './pages/LandingPage'
+import ToastContainer from './components/notifications/ToastContainer'
+import ConfirmModal from './components/notifications/ConfirmModal'
 import AuthorLayout from './layouts/AuthorLayout'
 import Dashboard from './pages/author/Dashboard'
 import MyArticles from './pages/author/MyArticles'
@@ -19,6 +21,8 @@ import ReviewerNotifications from './pages/reviewer/ReviewerNotifications'
 function App() {
   return (
     <div className="w-full min-h-screen">
+      <ToastContainer />
+      <ConfirmModal />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<Auth />} />

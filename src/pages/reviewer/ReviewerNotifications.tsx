@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../../utils/NotificationContext';
 
 interface Notification {
   id: string;
@@ -25,6 +26,7 @@ interface Notification {
 }
 
 const ReviewerNotifications = () => {
+  const { confirm, showToast } = useNotification();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([
     { 
@@ -76,9 +78,15 @@ const ReviewerNotifications = () => {
   };
 
   const clearAll = () => {
-    if (confirm('Are you sure you want to clear all notifications?')) {
-      setNotifications([]);
-    }
+    confirm({
+      title: 'Clear Notifications',
+      message: 'Are you sure you want to clear all notifications?',
+      confirmText: 'Clear All',
+      onConfirm: () => {
+        setNotifications([]);
+        showToast('All notifications cleared', 'info');
+      }
+    });
   };
 
 

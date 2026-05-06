@@ -13,9 +13,11 @@ import {
   Mail,
   AlertCircle
 } from 'lucide-react';
+import { useNotification } from '../../utils/NotificationContext';
 
 
 const SubmitArticle = () => {
+  const { showToast } = useNotification();
   // Form State
   const [formData, setFormData] = useState({
     title: '',
@@ -43,7 +45,7 @@ const SubmitArticle = () => {
       if (extension === 'doc' || extension === 'docx') {
         setFile(selectedFile);
       } else {
-        alert('Please upload only .doc or .docx files.');
+        showToast('Please upload only .doc or .docx files.', 'error');
       }
     }
   };
@@ -56,7 +58,7 @@ const SubmitArticle = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.abstract || !formData.category || !file) {
-      alert('Please fill all required fields and upload a manuscript.');
+      showToast('Please fill all required fields and upload a manuscript.', 'info');
       return;
     }
 

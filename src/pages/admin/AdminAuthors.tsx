@@ -20,6 +20,7 @@ import {
 import { cn } from '../../utils/cn';
 import AddReviewerModal from '../../components/admin/AddReviewerModal';
 import { useEffect } from 'react';
+import { useNotification } from '../../utils/NotificationContext';
 
 // Types
 type ReviewerStatus = 'Pending' | 'Approved' | 'Rejected';
@@ -35,6 +36,7 @@ interface Reviewer {
 }
 
 const AdminAuthors = () => {
+  const { confirm, showToast } = useNotification();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ReviewerStatus | 'All'>('All');
   const [selectedReviewer, setSelectedReviewer] = useState<Reviewer | null>(null);
@@ -100,11 +102,25 @@ const AdminAuthors = () => {
   }, []);
 
   const handleStatusUpdate = (id: string, newStatus: ReviewerStatus) => {
-    setReviewers(prev => prev.map(rev => 
-      rev.id === id ? { ...rev, status: newStatus } : rev
-    ));
-    if (selectedReviewer?.id === id) {
-      setSelectedReviewer(prev => prev ? { ...prev, status: newStatus } : null);
+    const update = () => {
+      setReviewers(prev => prev.map(rev => 
+        rev.id === id ? { ...rev, status: newStatus } : rev
+      ));
+      if (selectedReviewer?.id === id) {
+        setSelectedReviewer(prev => prev ? { ...prev, status: newStatus } : null);
+      }
+      showToast(`Reviewer ${newStatus.toLowerCase()} successfully`, newStatus === 'Approved' ? 'success' : 'error');
+    };
+
+    if (newStatus === 'Rejected') {
+      confirm({
+        title: 'Reject Reviewer',
+        message: 'Are you sure you want to reject this reviewer? They will not be able to access the portal.',
+        confirmText: 'Reject',
+        onConfirm: update
+      });
+    } else {
+      update();
     }
   };
 

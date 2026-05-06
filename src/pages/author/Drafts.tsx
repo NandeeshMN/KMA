@@ -11,6 +11,7 @@ import {
   Upload,
   Info
 } from 'lucide-react';
+import { useNotification } from '../../utils/NotificationContext';
 
 interface Draft {
   id: string;
@@ -21,6 +22,7 @@ interface Draft {
 }
 
 const Drafts = () => {
+  const { confirm, showToast } = useNotification();
   const [drafts, setDrafts] = useState<Draft[]>([
     {
       id: 'D-102',
@@ -43,9 +45,15 @@ const Drafts = () => {
 
 
   const deleteDraft = (id: string) => {
-    if (confirm('Are you sure you want to delete this draft?')) {
-      setDrafts(drafts.filter(d => d.id !== id));
-    }
+    confirm({
+      title: 'Delete Draft',
+      message: 'Are you sure you want to delete this draft?',
+      confirmText: 'Delete',
+      onConfirm: () => {
+        setDrafts(drafts.filter(d => d.id !== id));
+        showToast('Draft deleted successfully', 'success');
+      }
+    });
   };
 
   const handleEdit = (draft: Draft) => {

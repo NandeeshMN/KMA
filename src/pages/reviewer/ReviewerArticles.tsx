@@ -9,6 +9,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useNotification } from '../../utils/NotificationContext';
 
 // Types
 type ReviewStatus = 'Accepted' | 'Rejected' | 'Needs Improvement' | '';
@@ -24,6 +25,7 @@ interface Article {
 }
 
 const ReviewerArticles = () => {
+  const { showToast } = useNotification();
   const [articles, setArticles] = useState<Article[]>([
     { 
       id: 'KMA-2024-002', 
@@ -81,7 +83,7 @@ const ReviewerArticles = () => {
           art.id === id ? { ...art, uploadedFile: file } : art
         ));
       } else {
-        alert('Please upload PDF or DOC files only.');
+        showToast('Please upload PDF or DOC files only.', 'error');
       }
     }
   };
@@ -95,7 +97,7 @@ const ReviewerArticles = () => {
   const handleSubmit = async (id: string) => {
     const article = articles.find(a => a.id === id);
     if (!article || !article.uploadedFile || !article.selectedStatus) {
-      alert('Please upload a file and select a status before submitting.');
+      showToast('Please upload a file and select a status before submitting.', 'info');
       return;
     }
 
@@ -209,7 +211,7 @@ const ReviewerArticles = () => {
                         )}
                         <input 
                           type="file"
-                          ref={el => fileInputRefs.current[article.id] = el}
+                          ref={el => { fileInputRefs.current[article.id] = el; }}
                           onChange={(e) => handleFileChange(article.id, e)}
                           accept=".pdf,.doc,.docx"
                           className="hidden"

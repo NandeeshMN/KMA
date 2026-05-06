@@ -7,8 +7,10 @@ import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
 import ChangePasswordModal from '../components/reviewer/ChangePasswordModal';
+import { useNotification } from '../utils/NotificationContext';
 
 const ReviewerLayout = () => {
+  const { confirm, showToast } = useNotification();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [mustChangePassword, setMustChangePassword] = useState(localStorage.getItem('is_temp_password') === 'true');
@@ -23,9 +25,17 @@ const ReviewerLayout = () => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('role');
-    navigate('/auth');
+    confirm({
+      title: 'Confirm Logout',
+      message: 'Are you sure you want to log out of the Reviewer Portal?',
+      confirmText: 'Logout',
+      onConfirm: () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('role');
+        showToast('Logged out successfully', 'success');
+        navigate('/auth');
+      }
+    });
   };
 
   const navItems = [

@@ -20,6 +20,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useNotification } from '../../utils/NotificationContext';
 
 // Types
 type ArticleStatus = 
@@ -27,7 +28,8 @@ type ArticleStatus =
   | 'Needs Improvement' 
   | 'Approved' 
   | 'Published' 
-  | 'Rejected';
+  | 'Rejected'
+  | 'Sent to Reviewer';
 
 type ReviewerRecommendation = 'Approved' | 'Needs Improvement' | 'Rejected' | 'None';
 
@@ -57,6 +59,7 @@ interface Article {
 }
 
 const AdminArticles = () => {
+  const { confirm, showToast } = useNotification();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<ArticleStatus | 'All'>('All');
@@ -144,6 +147,7 @@ const AdminArticles = () => {
       case 'Rejected': return 'bg-rose-50 text-rose-600 border-rose-100';
       case 'Published': return 'bg-purple-50 text-purple-600 border-purple-100';
       case 'Submitted': return 'bg-blue-50 text-blue-600 border-blue-100';
+      case 'Sent to Reviewer': return 'bg-indigo-50 text-indigo-600 border-indigo-100';
       default: return 'bg-zinc-100 text-zinc-600 border-zinc-200';
     }
   };
@@ -155,6 +159,7 @@ const AdminArticles = () => {
       case 'Rejected': return <XCircle size={12} />;
       case 'Published': return <UploadCloud size={12} />;
       case 'Submitted': return <FileText size={12} />;
+      case 'Sent to Reviewer': return <Send size={12} />;
       default: return <Clock size={12} />;
     }
   };
@@ -428,9 +433,15 @@ const AdminArticles = () => {
                 {selectedArticle.reviewerFeedback?.recommendation === 'Rejected' && (
                   <button 
                     onClick={() => {
-                      if(window.confirm('Are you sure you want to REJECT this article? This action cannot be undone.')) {
-                        updateStatus(selectedArticle.id, 'Rejected');
-                      }
+                      confirm({
+                        title: 'Reject Article',
+                        message: 'Are you sure you want to REJECT this article? This action cannot be undone.',
+                        confirmText: 'Reject',
+                        onConfirm: () => {
+                          updateStatus(selectedArticle.id, 'Rejected');
+                          showToast('Article rejected successfully', 'error');
+                        }
+                      });
                     }}
                     className="w-full flex items-center justify-center gap-3 py-5 bg-rose-600 text-white rounded-2xl text-xs font-black tracking-widest hover:bg-rose-700 transition-all shadow-xl shadow-rose-600/20 active:scale-95"
                   >
@@ -442,9 +453,15 @@ const AdminArticles = () => {
                 {selectedArticle.reviewerFeedback?.recommendation === 'Approved' && (
                   <button 
                     onClick={() => {
-                      if(window.confirm('Are you sure you want to PUBLISH this article? It will appear on the main website.')) {
-                        updateStatus(selectedArticle.id, 'Published');
-                      }
+                      confirm({
+                        title: 'Publish Article',
+                        message: 'Are you sure you want to PUBLISH this article? It will appear on the main website.',
+                        confirmText: 'Publish',
+                        onConfirm: () => {
+                          updateStatus(selectedArticle.id, 'Published');
+                          showToast('Article published successfully', 'success');
+                        }
+                      });
                     }}
                     className="w-full flex items-center justify-center gap-3 py-5 bg-emerald-600 text-white rounded-2xl text-xs font-black tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-95"
                   >

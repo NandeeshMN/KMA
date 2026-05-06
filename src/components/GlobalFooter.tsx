@@ -1,4 +1,3 @@
-import React from 'react';
 import { Globe, Mail, Users, Info } from 'lucide-react';
 
 interface GlobalFooterProps {

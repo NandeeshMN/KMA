@@ -9,7 +9,7 @@ import {
   Edit3, 
   Save, 
   Loader2,
-  Image as ImageIcon
+  Trash2
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { useNotification } from '../utils/NotificationContext';
@@ -19,7 +19,7 @@ interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   profile: UserProfile | null;
-  onSave: (newData: UserProfile) => Promise<{ success: boolean }>;
+  onSave: (newData: UserProfile) => Promise<{ success: boolean; error?: string }>;
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, onSave }) => {
@@ -117,7 +117,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
             </div>
             
             {isEditing && (
-              <div className="absolute -bottom-2 flex gap-2">
+              <div className="absolute -bottom-2 flex flex-col items-center gap-2">
                 <button 
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -126,19 +126,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
                 >
                   <Camera size={18} />
                 </button>
-                {previewImage && (
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      setPreviewImage(null);
-                      setFormData({ ...formData, profileImage: null });
-                    }}
-                    className="w-10 h-10 bg-rose-600 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-700 transition-all active:scale-90 border-4 border-zinc-900"
-                    title="Remove Photo"
-                  >
-                    <X size={18} />
-                  </button>
-                )}
               </div>
             )}
             <input 
@@ -149,6 +136,21 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
               className="hidden" 
             />
           </div>
+
+          {/* New Explicit Remove Button as requested */}
+          {isEditing && previewImage && (
+            <button 
+              type="button"
+              onClick={() => {
+                setPreviewImage(null);
+                setFormData({ ...formData, profileImage: null });
+              }}
+              className="flex items-center gap-3 text-rose-500 hover:text-rose-400 transition-colors py-2 group mb-4"
+            >
+              <Trash2 size={20} className="group-hover:scale-110 transition-transform" />
+              <span className="text-sm font-medium tracking-tight">Remove current picture</span>
+            </button>
+          )}
 
           <h2 className="text-2xl font-bold tracking-tight mb-1">{formData.name}</h2>
           <div className="flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded-full border border-white/5 mb-8">

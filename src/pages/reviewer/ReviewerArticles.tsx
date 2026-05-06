@@ -4,7 +4,6 @@ import {
   Download, 
   Upload, 
   CheckCircle2, 
-  X, 
   Loader2,
   AlertCircle
 } from 'lucide-react';

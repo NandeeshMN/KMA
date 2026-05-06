@@ -1,7 +1,5 @@
-import React from 'react';
 import { X, AlertCircle } from 'lucide-react';
 import { useNotification } from '../../utils/NotificationContext';
-import { cn } from '../../utils/cn';
 
 const ConfirmModal: React.FC = () => {
   const { confirmOptions, closeConfirm } = useNotification();

@@ -66,15 +66,23 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ isOpen, onClose, us
     };
 
     try {
-      // Simulate API call
-      // const response = await fetch('/api/report-issue', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ issueType, description, metadata })
-      // });
-      
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      console.log('Reporting Issue:', { issueType, description, screenshot: screenshot?.name, metadata });
+      // Save to localStorage for Developer Dashboard
+      const newIssue: any = {
+        id: `ISS-${Date.now().toString().slice(-6)}`,
+        type: issueType,
+        description,
+        screenshot: screenshotPreview,
+        status: 'Open',
+        createdAt: new Date().toISOString(),
+        metadata
+      };
+
+      const existingIssues = JSON.parse(localStorage.getItem('kma_reported_issues') || '[]');
+      localStorage.setItem('kma_reported_issues', JSON.stringify([newIssue, ...existingIssues]));
+
+      console.log('Reporting Issue Saved:', newIssue);
       setIsSuccess(true);
       setTimeout(() => onClose(), 2000);
     } catch (error) {

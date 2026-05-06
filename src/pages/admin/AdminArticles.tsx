@@ -16,8 +16,7 @@ import {
   History, 
   X,
   MessageSquare,
-  AlertCircle,
-  UserCheck
+  AlertCircle
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useNotification } from '../../utils/NotificationContext';
@@ -79,7 +78,6 @@ const AdminArticles = () => {
 
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [isAssigning, setIsAssigning] = useState(false);
 
   const [articles, setArticles] = useState<Article[]>([
     {
@@ -132,13 +130,6 @@ const AdminArticles = () => {
   const [isAdminNoteModalOpen, setIsAdminNoteModalOpen] = useState(false);
   const [adminNote, setAdminNote] = useState('');
 
-  const availableReviewers = [
-    'Prof. Alan Turing',
-    'Dr. John Doe',
-    'Dr. Jane Smith',
-    'Prof. Gauss',
-    'Dr. Emmy Noether'
-  ];
 
   const getStatusStyles = (status: string) => {
     switch (status) {
@@ -182,13 +173,6 @@ const AdminArticles = () => {
     }
   };
 
-  const assignReviewer = (id: string, reviewer: string) => {
-    setArticles(prev => prev.map(a => a.id === id ? { ...a, assignedReviewer: reviewer, status: 'Sent to Reviewer' } : a));
-    if (selectedArticle?.id === id) {
-      setSelectedArticle(prev => prev ? { ...prev, assignedReviewer: reviewer, status: 'Sent to Reviewer' } : null);
-    }
-    setIsAssigning(false);
-  };
 
   return (
     <div className="animate-in fade-in duration-500 max-w-7xl mx-auto">

@@ -36,6 +36,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail = '', onSwitchToRe
       localStorage.setItem('userEmail', email);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/reviewer-dashboard');
+    } else if (email === 'developer@gmail.com' && password === 'developer123') {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('role', 'developer');
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('is_temp_password', 'false');
+      navigate('/developer-dashboard');
     } else {
       // Check simulated database for newly added reviewers
       const users = JSON.parse(localStorage.getItem('users') || '[]');

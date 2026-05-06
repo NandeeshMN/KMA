@@ -18,7 +18,7 @@ export const validateEmail = (email: string): ValidationResult => {
 
 export const validatePassword = (password: string): ValidationResult => {
   if (!password) return { isValid: false, message: "Password is required" };
-  if (password.length !== 8) return { isValid: false, message: "Password must be exactly 8 characters" };
+  if (password.length < 8) return { isValid: false, message: "Password must be at least 8 characters" };
 
   const hasUpper = /[A-Z]/.test(password);
   const hasLower = /[a-z]/.test(password);
@@ -41,7 +41,7 @@ export interface PasswordRequirement {
 }
 
 export const getPasswordRequirements = (password: string): PasswordRequirement[] => [
-  { label: "Exactly 8 characters", met: password.length === 8 },
+  { label: "At least 8 characters", met: password.length >= 8 },
   { label: "One uppercase letter (A–Z)", met: /[A-Z]/.test(password) },
   { label: "One lowercase letter (a–z)", met: /[a-z]/.test(password) },
   { label: "One numeric digit (0–9)", met: /[0-9]/.test(password) },
@@ -54,7 +54,7 @@ export const areAllPasswordRequirementsMet = (password: string): boolean =>
 export const getPasswordStrength = (password: string): number => {
   let strength = 0;
   if (!password) return 0;
-  if (password.length === 8) strength += 25;
+  if (password.length >= 8) strength += 25;
   if (/[A-Z]/.test(password)) strength += 25;
   if (/[a-z]/.test(password)) strength += 25;
   if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength += 25;

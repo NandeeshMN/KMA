@@ -17,6 +17,9 @@ import ReviewerLayout from './layouts/ReviewerLayout'
 import ReviewerDashboard from './pages/reviewer/ReviewerDashboard'
 import ReviewerArticles from './pages/reviewer/ReviewerArticles'
 import ReviewerNotifications from './pages/reviewer/ReviewerNotifications'
+import DeveloperLayout from './layouts/DeveloperLayout'
+import DeveloperDashboard from './pages/developer/DeveloperDashboard'
+import DeveloperIssues from './pages/developer/DeveloperIssues'
 
 function App() {
   return (
@@ -49,6 +52,12 @@ function App() {
           <Route index element={<ReviewerDashboard />} />
           <Route path="articles" element={<ReviewerArticles />} />
           <Route path="notifications" element={<ReviewerNotifications />} />
+        </Route>
+
+        {/* Developer Portal Routes */}
+        <Route path="/developer-dashboard" element={<DeveloperLayout />}>
+          <Route index element={<DeveloperDashboard />} />
+          <Route path="issues" element={<DeveloperIssues />} />
         </Route>
       </Routes>
     </div>

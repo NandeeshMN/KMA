@@ -117,12 +117,29 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
             </div>
             
             {isEditing && (
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute bottom-1 right-1 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all active:scale-90 border-4 border-zinc-900"
-              >
-                <Camera size={18} />
-              </button>
+              <div className="absolute -bottom-2 flex gap-2">
+                <button 
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all active:scale-90 border-4 border-zinc-900"
+                  title="Upload New Photo"
+                >
+                  <Camera size={18} />
+                </button>
+                {previewImage && (
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setPreviewImage(null);
+                      setFormData({ ...formData, profileImage: null });
+                    }}
+                    className="w-10 h-10 bg-rose-600 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-700 transition-all active:scale-90 border-4 border-zinc-900"
+                    title="Remove Photo"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
             )}
             <input 
               type="file" 

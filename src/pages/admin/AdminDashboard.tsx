@@ -16,8 +16,10 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { NavLink } from 'react-router-dom';
+import { useProfile } from '../../hooks/useProfile';
 
 const AdminDashboard = () => {
+  const { profile } = useProfile();
   // Dummy Data
   const pendingAdminCount = 12;
   const reviewerRequestsCount = 4;
@@ -43,7 +45,7 @@ const AdminDashboard = () => {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="text-4xl font-bold tracking-tighter text-black">System Overview</h1>
-          <p className="text-zinc-500 mt-2 text-sm max-w-md">Welcome back, <span className="font-bold text-black">Head Administrator</span>. Global system activity is stable with <span className="font-bold text-blue-600">{pendingAdminCount} items</span> requiring your final decision.</p>
+          <p className="text-zinc-500 mt-2 text-sm max-w-md">Welcome back, <span className="font-bold text-black">{profile?.name || "Head Administrator"}</span>. Global system activity is stable with <span className="font-bold text-blue-600">{pendingAdminCount} items</span> requiring your final decision.</p>
         </div>
         <div className="flex items-center gap-3 bg-white/70 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-sm">
           <ShieldCheck size={16} className="text-zinc-400" />

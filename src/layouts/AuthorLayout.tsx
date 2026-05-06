@@ -7,9 +7,11 @@ import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
 import { useNotification } from '../utils/NotificationContext';
+import { useProfile } from '../hooks/useProfile';
 
 const AuthorLayout = () => {
   const { confirm, showToast } = useNotification();
+  const { profile } = useProfile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -120,8 +122,8 @@ const AuthorLayout = () => {
         {/* Global Header */}
         <GlobalHeader 
           onMenuClick={() => setIsSidebarOpen(true)} 
-          userName="Dr. Aris Thorne"
-          userInitials="AT"
+          userName={profile?.name || "Dr. Aris Thorne"}
+          userInitials={profile?.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "AT"}
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />

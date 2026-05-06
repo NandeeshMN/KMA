@@ -15,8 +15,10 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { NavLink } from 'react-router-dom';
+import { useProfile } from '../../hooks/useProfile';
 
 const Dashboard = () => {
+  const { profile } = useProfile();
   // Dummy Data for the Overview
   const stats = [
     { label: 'Total Articles', value: '12', icon: FileText, color: 'text-zinc-600', bg: 'bg-zinc-100' },
@@ -42,7 +44,7 @@ const Dashboard = () => {
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 className="text-4xl font-bold tracking-tighter text-black">Author Overview</h1>
-          <p className="text-zinc-500 mt-2 text-sm max-w-md">Welcome back, <span className="font-bold text-black">Dr. Aris Thorne</span>. Here is the latest activity across your research portfolio.</p>
+          <p className="text-zinc-500 mt-2 text-sm max-w-md">Welcome back, <span className="font-bold text-black">{profile?.name || "Dr. Aris Thorne"}</span>. Here is the latest activity across your research portfolio.</p>
         </div>
         <div className="flex items-center gap-3 bg-white/70 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-sm">
           <Clock size={16} className="text-zinc-400" />

@@ -21,16 +21,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail = '', onSwitchToRe
     if (email === 'authour@gmail.com' && password === 'authour@123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'author');
+      localStorage.setItem('userEmail', email);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/author/dashboard');
     } else if (email === 'admin@gmail.com' && password === 'admin123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'admin');
+      localStorage.setItem('userEmail', email);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/admin-dashboard');
     } else if (email === 'reviewer@gmail.com' && password === 'reviewer123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'reviewer');
+      localStorage.setItem('userEmail', email);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/reviewer-dashboard');
     } else {

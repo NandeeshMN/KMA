@@ -8,9 +8,11 @@ import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
 import ChangePasswordModal from '../components/reviewer/ChangePasswordModal';
 import { useNotification } from '../utils/NotificationContext';
+import { useProfile } from '../hooks/useProfile';
 
 const ReviewerLayout = () => {
   const { confirm, showToast } = useNotification();
+  const { profile } = useProfile();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [mustChangePassword, setMustChangePassword] = useState(localStorage.getItem('is_temp_password') === 'true');
@@ -129,8 +131,8 @@ const ReviewerLayout = () => {
         {/* Global Header */}
         <GlobalHeader 
           onMenuClick={() => setIsSidebarOpen(true)} 
-          userName="Dr. John Doe"
-          userInitials="JD"
+          userName={profile?.name || "Dr. John Doe"}
+          userInitials={profile?.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "JD"}
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />

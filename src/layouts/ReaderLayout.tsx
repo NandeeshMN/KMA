@@ -8,7 +8,9 @@ import {
   User, 
   LogOut, 
   X, 
-  HelpCircle
+  HelpCircle,
+  Lock,
+  Zap
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import SidebarHeader from '../components/SidebarHeader';
@@ -17,10 +19,12 @@ import GlobalFooter from '../components/GlobalFooter';
 import ReportIssueModal from '../components/ReportIssueModal';
 import { useNotification } from '../utils/NotificationContext';
 import { useProfile } from '../hooks/useProfile';
+import { useSubscription } from '../utils/SubscriptionContext';
 
 const ReaderLayout = () => {
   const { confirm, showToast } = useNotification();
   const { profile } = useProfile();
+  const { isSubscribed } = useSubscription();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,12 +44,24 @@ const ReaderLayout = () => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/reader-dashboard', end: true, icon: LayoutDashboard },
-    { name: 'Payments', path: '/reader-dashboard/payments', icon: CreditCard },
-    { name: 'Notifications', path: '/reader-dashboard/notifications', icon: Bell },
-    { name: 'Saved Articles', path: '/reader-dashboard/saved', icon: Bookmark },
-    { name: 'Profile', path: '/reader-dashboard/profile', icon: User },
+    { name: 'Dashboard', path: '/reader-dashboard', end: true, icon: LayoutDashboard, locked: false },
+    { name: 'Payments', path: '/reader-dashboard/payments', icon: CreditCard, locked: !isSubscribed },
+    { name: 'Notifications', path: '/reader-dashboard/notifications', icon: Bell, locked: !isSubscribed },
+    { name: 'Saved Articles', path: '/reader-dashboard/saved', icon: Bookmark, locked: !isSubscribed },
+    { name: 'Profile', path: '/reader-dashboard/profile', icon: User, locked: false },
   ];
+
+  const handleLockedClick = (e: React.MouseEvent, item: typeof navItems[0]) => {
+    if (item.locked) {
+      e.preventDefault();
+      confirm({
+        title: 'Feature Locked',
+        message: 'A KMA Reader Subscription is required to access this feature. Would you like to view our plans?',
+        confirmText: 'View Plans',
+        onConfirm: () => navigate('/reader-dashboard/get-subscription')
+      });
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-zinc-50 font-['Outfit'] lg:pl-64">
@@ -76,15 +92,22 @@ const ReaderLayout = () => {
           {navItems.map((item) => (
             <NavLink
               key={item.name}
-              to={item.path}
+              to={item.locked ? '#' : item.path}
               end={item.end}
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={(e) => {
+                if (item.locked) {
+                  handleLockedClick(e, item);
+                } else {
+                  setIsSidebarOpen(false);
+                }
+              }}
               className={({ isActive }) =>
                 cn(
                   "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative",
-                  isActive 
+                  isActive && !item.locked
                     ? "bg-zinc-800/80 text-white shadow-lg ring-1 ring-white/10" 
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-900",
+                  item.locked && "opacity-50 cursor-not-allowed hover:bg-transparent"
                 )
               }
             >
@@ -93,15 +116,37 @@ const ReaderLayout = () => {
                   <div className="flex items-center gap-3">
                     <item.icon size={18} className={cn(
                       "transition-transform group-hover:scale-110",
-                      isActive ? "text-white" : "text-zinc-600"
+                      isActive && !item.locked ? "text-white" : "text-zinc-600"
                     )} />
                     {item.name}
                   </div>
-                  {isActive && <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)]" />}
+                  {item.locked ? (
+                    <Lock size={14} className="text-zinc-600" />
+                  ) : isActive && (
+                    <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                  )}
                 </>
               )}
             </NavLink>
           ))}
+
+          {!isSubscribed && (
+            <NavLink
+              to="/reader-dashboard/get-subscription"
+              onClick={() => setIsSidebarOpen(false)}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-4 py-4 rounded-2xl text-sm font-bold transition-all duration-300 mt-6 border border-white/5",
+                  isActive 
+                    ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]" 
+                    : "bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white"
+                )
+              }
+            >
+              <Zap size={18} className="animate-pulse" />
+              Get Subscription
+            </NavLink>
+          )}
         </nav>
 
         <div className="p-4 mb-4 border-t border-white/5 mt-auto">

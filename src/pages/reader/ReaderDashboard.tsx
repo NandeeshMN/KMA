@@ -1,122 +1,141 @@
-import { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
-  CreditCard, 
-  Bell, 
+  BookOpen, 
+  Clock, 
+  Zap, 
+  ChevronRight, 
   Bookmark, 
-  ChevronRight,
-  TrendingUp,
-  ShieldCheck,
-  ExternalLink
+  FileText,
+  Search,
+  Filter,
+  Users,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { useSubscription } from '../../utils/SubscriptionContext';
 
 const ReaderDashboard = () => {
+  const navigate = useNavigate();
+  const { isSubscribed } = useSubscription();
+
   const stats = [
-    { label: 'Total Payments', value: '₹4,990', icon: CreditCard, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Membership', value: 'Active', icon: ShieldCheck, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Pending Dues', value: '₹0', icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Saved Articles', value: '12', icon: Bookmark, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Published Papers', value: '1,248', icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Saved Articles', value: isSubscribed ? '12' : '0', icon: Bookmark, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'KMA Volume', value: 'Vol. 42', icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Recent Reads', value: isSubscribed ? '4' : '0', icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50' },
   ];
 
-  const recentNotifications = [
-    { id: 1, title: 'Payment Successful', message: 'Your payment for "Quantum Computing" has been processed.', time: '2 hours ago', type: 'success', read: false },
-    { id: 2, title: 'New Article Published', message: 'A new article in Topology is now available.', time: '5 hours ago', type: 'info', read: true },
-    { id: 3, title: 'Renewal Reminder', message: 'Your annual membership expires in 15 days.', time: '1 day ago', type: 'warning', read: true },
-  ];
-
-  const recentSaved = [
-    { id: 'ART-001', title: 'On the Homotopy Type of Certain Spaces', tag: 'Topology', date: 'Oct 12, 2023' },
-    { id: 'ART-002', title: 'Prime Distribution in Arithmetic Progressions', tag: 'Number Theory', date: 'Sep 25, 2023' },
+  const articles = [
+    { id: 'ART-001', tag: 'Topology', title: 'On the Homotopy Type of Certain Spaces', author: 'Dr. S. Raman', date: 'Oct 2023' },
+    { id: 'ART-002', tag: 'Number Theory', title: 'Prime Distribution in Arithmetic Progressions', author: 'M. Nair', date: 'Sep 2023' },
+    { id: 'ART-003', tag: 'Applied Math', title: 'Fluid Dynamics in Porous Media', author: 'A. K. Menon', date: 'Jun 2023' },
   ];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* Welcome Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-black tracking-tight font-['Outfit']">Reader Overview</h1>
-        <p className="text-zinc-500 mt-1">Welcome back. Here is what's happening with your account.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-black tracking-tight font-['Outfit']">Reader Dashboard</h1>
+          <p className="text-zinc-500 mt-1">Explore the latest research in the KMA scholarly archive.</p>
+        </div>
+        
+        {!isSubscribed && (
+          <button 
+            onClick={() => navigate('/reader-dashboard/get-subscription')}
+            className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-sm font-bold shadow-xl shadow-black/20 hover:bg-zinc-800 transition-all active:scale-95 animate-pulse"
+          >
+            <Zap size={16} className="fill-yellow-400 text-yellow-400" />
+            Upgrade (Session Only)
+          </button>
+        )}
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, i) => (
-          <div key={i} className="bg-white border border-zinc-200 p-6 rounded-2xl group hover:border-black transition-all shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className={cn("p-3 rounded-xl", stat.bg)}>
-                <stat.icon className={stat.color} size={20} />
-              </div>
-              <TrendingUp className="text-zinc-100" size={16} />
+          <div key={i} className="bg-white border border-zinc-100 p-6 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
+            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-inner", stat.bg)}>
+              <stat.icon size={24} className={stat.color} />
             </div>
-            <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">{stat.label}</p>
-            <h3 className="text-2xl font-bold text-black mt-1">{stat.value}</h3>
+            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{stat.label}</p>
+            <p className="text-2xl font-bold text-black mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Notifications */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-black font-['Outfit']">Recent Notifications</h2>
-            <button className="text-xs font-bold text-black hover:underline uppercase tracking-widest flex items-center gap-2">
-              View All <ChevronRight size={14} />
-            </button>
-          </div>
+      {/* Main Content: Article Browser */}
+      <div className="bg-white border border-zinc-100 rounded-[2.5rem] p-8 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+          <h2 className="text-xl font-bold text-black font-['Outfit'] flex items-center gap-2">
+            <ShieldCheck size={20} className="text-blue-500" />
+            Latest Publications
+          </h2>
           
-          <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
-            <div className="divide-y divide-zinc-100">
-              {recentNotifications.map((notif) => (
-                <div key={notif.id} className={cn(
-                  "p-6 flex items-start gap-4 hover:bg-zinc-50 transition-colors relative",
-                  !notif.read && "after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-black"
-                )}>
-                  <div className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
-                    notif.type === 'success' ? 'bg-emerald-50 text-emerald-600' :
-                    notif.type === 'warning' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'
-                  )}>
-                    <Bell size={18} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="text-sm font-bold text-black">{notif.title}</h4>
-                      <span className="text-[10px] text-zinc-400 font-bold">{notif.time}</span>
-                    </div>
-                    <p className="text-xs text-zinc-500 leading-relaxed">{notif.message}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <input 
+                type="text" 
+                placeholder="Filter articles..."
+                className="pl-11 pr-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-black/5 outline-none w-full md:w-64"
+              />
             </div>
+            <button className="p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl hover:bg-zinc-100 transition-colors">
+              <Filter size={18} className="text-zinc-600" />
+            </button>
           </div>
         </div>
 
-        {/* Saved Articles Shortcut */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-black font-['Outfit']">Saved Articles</h2>
-            <button className="text-xs font-bold text-black hover:underline uppercase tracking-widest flex items-center gap-2">
-              Explore <ChevronRight size={14} />
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {recentSaved.map((art) => (
-              <div key={art.id} className="bg-white border border-zinc-200 p-5 rounded-2xl hover:border-black transition-all group shadow-sm">
-                <span className="text-[9px] font-black text-blue-600 uppercase tracking-[0.2em]">{art.tag}</span>
-                <h4 className="text-sm font-bold text-black mt-1 group-hover:text-blue-600 transition-colors line-clamp-1">{art.title}</h4>
-                <div className="flex items-center justify-between mt-4">
-                  <span className="text-[10px] text-zinc-400 font-medium">{art.date}</span>
-                  <button className="p-2 bg-zinc-50 text-black rounded-lg hover:bg-black hover:text-white transition-all">
-                    <ExternalLink size={14} />
-                  </button>
+        <div className="space-y-4">
+          {articles.map((art) => (
+            <div 
+              key={art.id}
+              className="group p-6 bg-white border border-zinc-100 rounded-2xl hover:border-zinc-300 hover:shadow-lg transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
+            >
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="px-2.5 py-0.5 bg-zinc-100 text-zinc-600 rounded-md text-[10px] font-black uppercase tracking-widest">
+                    {art.tag}
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">{art.id}</span>
+                </div>
+                <h3 className="text-lg font-bold text-black group-hover:text-blue-600 transition-colors leading-tight">
+                  {art.title}
+                </h3>
+                <div className="flex items-center gap-4 text-xs text-zinc-500 font-medium">
+                  <div className="flex items-center gap-1.5">
+                    <Users size={14} className="text-zinc-400" /> {art.author}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Clock size={14} className="text-zinc-400" /> {art.date}
+                  </div>
                 </div>
               </div>
-            ))}
-            
-            <button className="w-full py-4 border border-dashed border-zinc-200 rounded-2xl text-[10px] font-black text-zinc-400 uppercase tracking-widest hover:border-zinc-400 hover:text-zinc-600 transition-all">
-              Go to Saved Articles List
-            </button>
-          </div>
+
+              <div className="shrink-0 flex items-center gap-4">
+                {isSubscribed ? (
+                  <button className="px-5 py-2.5 bg-black text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-all flex items-center gap-2">
+                    Read Full <ChevronRight size={14} />
+                  </button>
+                ) : (
+                  <div className="flex flex-col items-end gap-2">
+                    <button className="px-5 py-2.5 bg-zinc-100 text-zinc-400 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 cursor-not-allowed">
+                      Locked <ChevronRight size={14} />
+                    </button>
+                    <span className="text-[9px] font-bold text-zinc-400 italic">Upgrade Required</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 pt-8 border-t border-zinc-100 text-center">
+          <button className="text-[10px] font-black text-zinc-400 hover:text-black uppercase tracking-[0.2em] transition-all">
+            Load More Research Papers
+          </button>
         </div>
       </div>
     </div>

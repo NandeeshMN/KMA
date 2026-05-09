@@ -35,10 +35,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
     formData.confirmPassword.length > 0 &&
     formData.password === formData.confirmPassword;
 
-  const isFormReady = 
-    formData.name.length > 0 && 
-    formData.email.length > 0 && 
-    formData.password.length >= 8 && 
+  const isFormReady =
+    formData.name.length > 0 &&
+    formData.email.length > 0 &&
+    formData.password.length >= 8 &&
     passwordsMatch &&
     (formData.role !== 'reviewer' || (formData.qualification.length > 0 && formData.experience.length > 0));
 
@@ -48,7 +48,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
     if (!nameV.isValid) newErrors.name = nameV.message!;
     const emailV = validateEmail(formData.email);
     if (!emailV.isValid) newErrors.email = emailV.message!;
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0 && isFormReady;
   };
@@ -216,7 +216,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
                   {[1, 2, 3, 4].map((i) => {
                     const strength = formData.password.length;
                     let color = "bg-zinc-100";
-                    
+
                     if (strength > 0) {
                       if (i === 1) {
                         if (strength <= 3) color = "bg-red-500";
@@ -233,12 +233,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
                     }
 
                     return (
-                      <div 
-                        key={i} 
+                      <div
+                        key={i}
                         className={cn(
                           "flex-1 rounded-full transition-all duration-500",
                           color
-                        )} 
+                        )}
                       />
                     );
                   })}
@@ -268,11 +268,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
                 </div>
                 {/* Underline */}
                 <div className={cn(
-                  "h-0.5 w-full transition-colors duration-300", 
-                  formData.confirmPassword.length === 0 
-                    ? "bg-zinc-100" 
-                    : formData.password === formData.confirmPassword 
-                      ? "bg-green-500" 
+                  "h-0.5 w-full transition-colors duration-300",
+                  formData.confirmPassword.length === 0
+                    ? "bg-zinc-100"
+                    : formData.password === formData.confirmPassword
+                      ? "bg-green-500"
                       : "bg-red-500"
                 )} />
               </div>

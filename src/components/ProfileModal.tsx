@@ -9,7 +9,8 @@ import {
   Edit3, 
   Save, 
   Loader2,
-  Trash2
+  Trash2,
+  FileText
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { useNotification } from '../utils/NotificationContext';
@@ -211,6 +212,37 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
                 ) : (
                   <p className="text-sm font-medium bg-white/5 border border-white/5 rounded-xl px-4 py-3">
                     {formData.phone || <span className="opacity-40 italic">No phone number provided</span>}
+                  </p>
+                )}
+              </div>
+
+              {/* Bio Field */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                    <FileText size={12} /> Bio / About
+                  </label>
+                  {isEditing && (
+                    <span className={cn(
+                      "text-[9px] font-bold tracking-tight px-1.5 py-0.5 rounded-md",
+                      (formData.bio?.length || 0) >= 150 ? "bg-rose-500/10 text-rose-500" : "bg-zinc-800 text-zinc-500"
+                    )}>
+                      {formData.bio?.length || 0} / 150
+                    </span>
+                  )}
+                </div>
+                {isEditing ? (
+                  <textarea 
+                    maxLength={150}
+                    rows={3}
+                    placeholder="Tell people about yourself..."
+                    value={formData.bio}
+                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                    className="w-full bg-zinc-800 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none scrollbar-hide"
+                  />
+                ) : (
+                  <p className="text-sm font-medium bg-white/5 border border-white/5 rounded-xl px-4 py-3 min-h-[80px] leading-relaxed text-zinc-300">
+                    {formData.bio || <span className="opacity-40 italic">Tell people about yourself...</span>}
                   </p>
                 )}
               </div>

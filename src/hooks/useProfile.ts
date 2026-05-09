@@ -5,6 +5,7 @@ export interface UserProfile {
   email: string;
   role: string;
   phone: string;
+  bio: string;
   profileImage: string | null;
 }
 
@@ -27,6 +28,7 @@ export const useProfile = () => {
         email: email,
         role: role.charAt(0).toUpperCase() + role.slice(1),
         phone: '',
+        bio: '',
         profileImage: null
       };
       setProfile(defaultProfile);

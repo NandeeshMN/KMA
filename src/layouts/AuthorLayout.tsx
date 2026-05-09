@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileEdit, BookOpen, Inbox, Bell, Search, LogOut, X, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, FileEdit, BookOpen, Inbox, Bell, Search, LogOut, X, HelpCircle, User } from 'lucide-react';
 import { cn } from '../utils/cn';
 import SidebarHeader from '../components/SidebarHeader';
 import GlobalHeader from '../components/GlobalHeader';
@@ -35,6 +35,7 @@ const AuthorLayout = () => {
     { name: 'My Articles', path: '/author/articles', icon: BookOpen },
     { name: 'Drafts', path: '/author/drafts', icon: Inbox },
     { name: 'Notifications', path: '/author/notifications', icon: Bell, badge: 3 },
+    { name: 'Profile', path: '/author/profile', icon: User },
   ];
 
   return (
@@ -124,6 +125,7 @@ const AuthorLayout = () => {
           onMenuClick={() => setIsSidebarOpen(true)} 
           userName={profile?.name || "Dr. Aris Thorne"}
           userInitials={profile?.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "AT"}
+          showProfile={false}
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, LogOut, X, Search, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, LogOut, X, Search, HelpCircle, User } from 'lucide-react';
 import { cn } from '../utils/cn';
 import SidebarHeader from '../components/SidebarHeader';
 import GlobalHeader from '../components/GlobalHeader';
@@ -42,6 +42,7 @@ const AdminLayout = () => {
     { name: 'Dashboard', path: '/admin-dashboard', end: true, icon: LayoutDashboard },
     { name: 'Reviewers', path: '/admin-dashboard/authors', icon: Users },
     { name: 'Articles', path: '/admin-dashboard/articles', icon: FileText },
+    { name: 'Profile', path: '/admin-dashboard/profile', icon: User },
   ];
 
   return (
@@ -124,6 +125,7 @@ const AdminLayout = () => {
           onMenuClick={() => setIsSidebarOpen(true)} 
           userName={profile?.name || "Admin Manager"}
           userInitials={profile?.name ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "AM"}
+          showProfile={false}
           rightActions={
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />

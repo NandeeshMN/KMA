@@ -16,36 +16,44 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail = '', onSwitchToRe
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
     
     // Check static credentials first
-    if (email === 'authour@gmail.com' && password === 'authour@123') {
+    if (cleanEmail === 'authour@gmail.com' && cleanPassword === 'authour@123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'author');
-      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userEmail', cleanEmail);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/author/dashboard');
-    } else if (email === 'admin@gmail.com' && password === 'admin123') {
+    } else if (cleanEmail === 'admin@gmail.com' && cleanPassword === 'admin123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'admin');
-      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userEmail', cleanEmail);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/admin-dashboard');
-    } else if (email === 'reviewer@gmail.com' && password === 'reviewer123') {
+    } else if (cleanEmail === 'reviewer@gmail.com' && cleanPassword === 'reviewer123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'reviewer');
-      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userEmail', cleanEmail);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/reviewer-dashboard');
-    } else if (email === 'developer@gmail.com' && password === 'developer123') {
+    } else if (cleanEmail === 'developer@gmail.com' && cleanPassword === 'developer123') {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('role', 'developer');
-      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userEmail', cleanEmail);
       localStorage.setItem('is_temp_password', 'false');
       navigate('/developer-dashboard');
+    } else if (cleanEmail === 'reader@gmail.com' && cleanPassword === 'reader123') {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('role', 'reader');
+      localStorage.setItem('userEmail', cleanEmail);
+      localStorage.setItem('is_temp_password', 'false');
+      navigate('/reader-dashboard');
     } else {
       // Check simulated database for newly added reviewers
       const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = users.find((u: any) => u.email === email && u.password === password);
+      const user = users.find((u: any) => u.email.toLowerCase() === cleanEmail && u.password === cleanPassword);
       
       if (user) {
         localStorage.setItem('isLoggedIn', 'true');

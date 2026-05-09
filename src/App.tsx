@@ -20,6 +20,14 @@ import ReviewerNotifications from './pages/reviewer/ReviewerNotifications'
 import DeveloperLayout from './layouts/DeveloperLayout'
 import DeveloperDashboard from './pages/developer/DeveloperDashboard'
 import DeveloperIssues from './pages/developer/DeveloperIssues'
+import ReaderLayout from './layouts/ReaderLayout'
+import ReaderDashboard from './pages/reader/ReaderDashboard'
+import ReaderPayments from './pages/reader/ReaderPayments'
+import ReaderNotifications from './pages/reader/ReaderNotifications'
+import ReaderSavedArticles from './pages/reader/ReaderSavedArticles'
+import ReaderProfile from './pages/reader/ReaderProfile'
+import ProfilePage from './pages/ProfilePage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -31,33 +39,66 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         
         {/* Author Portal Routes */}
-        <Route path="/author" element={<AuthorLayout />}>
+        <Route path="/author" element={
+          <ProtectedRoute allowedRole="author">
+            <AuthorLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<Navigate to="/author/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="articles" element={<MyArticles />} />
           <Route path="submit" element={<SubmitArticle />} />
           <Route path="drafts" element={<Drafts />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
 
         {/* Admin Portal Routes */}
-        <Route path="/admin-dashboard" element={<AdminLayout />}>
+        <Route path="/admin-dashboard" element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<AdminDashboard />} />
           <Route path="authors" element={<AdminAuthors />} />
           <Route path="articles" element={<AdminArticles />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
 
         {/* Reviewer Portal Routes */}
-        <Route path="/reviewer-dashboard" element={<ReviewerLayout />}>
+        <Route path="/reviewer-dashboard" element={
+          <ProtectedRoute allowedRole="reviewer">
+            <ReviewerLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<ReviewerDashboard />} />
           <Route path="articles" element={<ReviewerArticles />} />
           <Route path="notifications" element={<ReviewerNotifications />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
 
         {/* Developer Portal Routes */}
-        <Route path="/developer-dashboard" element={<DeveloperLayout />}>
+        <Route path="/developer-dashboard" element={
+          <ProtectedRoute allowedRole="developer">
+            <DeveloperLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<DeveloperDashboard />} />
           <Route path="issues" element={<DeveloperIssues />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* Reader Portal Routes */}
+        <Route path="/reader-dashboard" element={
+          <ProtectedRoute allowedRole="reader">
+            <ReaderLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<ReaderDashboard />} />
+          <Route path="payments" element={<ReaderPayments />} />
+          <Route path="notifications" element={<ReaderNotifications />} />
+          <Route path="saved" element={<ReaderSavedArticles />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </div>

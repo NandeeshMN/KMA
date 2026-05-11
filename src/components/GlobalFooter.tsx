@@ -28,7 +28,20 @@ const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
           </div>
 
           {/* Copyright (Center) */}
-          <div className="text-center">
+          <div className="text-center space-y-4">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
+              {[
+                'About Us',
+                'Contact Us',
+                'Privacy Policy',
+                'Terms & Conditions',
+                'Refund/Cancellation Policy'
+              ].map(link => (
+                <button key={link} className="text-[9px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
+                  {link}
+                </button>
+              ))}
+            </div>
             <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-[0.1em]">
               © 2024 KERALA MATHEMATICAL ASSOCIATION. ALL RIGHTS RESERVED.
             </p>

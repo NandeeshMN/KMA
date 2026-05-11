@@ -1,3 +1,4 @@
+import React from 'react';
 import { Globe, Mail, Users, Info } from 'lucide-react';
 
 interface GlobalFooterProps {
@@ -28,21 +29,24 @@ const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
           </div>
 
           {/* Copyright (Center) */}
-          <div className="text-center space-y-4">
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
+          <div className="text-center space-y-6">
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
               {[
                 'About Us',
                 'Contact Us',
                 'Privacy Policy',
                 'Terms & Conditions',
                 'Refund/Cancellation Policy'
-              ].map(link => (
-                <button key={link} className="text-[9px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
-                  {link}
-                </button>
+              ].map((link, idx, arr) => (
+                <React.Fragment key={link}>
+                  <button className="text-[8px] font-black text-zinc-500 hover:text-white uppercase tracking-[0.15em] transition-all duration-300">
+                    {link}
+                  </button>
+                  {idx < arr.length - 1 && <span className="text-zinc-800 text-[8px]">•</span>}
+                </React.Fragment>
               ))}
             </div>
-            <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-[0.1em]">
+            <p className="text-[9px] text-zinc-600 uppercase font-black tracking-[0.2em] opacity-50">
               © 2024 KERALA MATHEMATICAL ASSOCIATION. ALL RIGHTS RESERVED.
             </p>
           </div>

@@ -192,7 +192,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="form-label" htmlFor="reg-password">Password</label>
+                <label className="form-label" htmlFor="reg-password">
+                  Password{' '}
+                  <span className="font-bold normal-case tracking-normal">[A,a,1,!]</span>
+                </label>
                 <div className="relative group">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-black transition-colors" size={18} />
                   <input
@@ -211,38 +214,44 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onSwitch
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                {/* Password Strength Indicator */}
-                <div className="flex gap-1.5 mt-2 h-1">
-                  {[1, 2, 3, 4].map((i) => {
-                    const strength = formData.password.length;
-                    let color = "bg-zinc-100";
+                {/* ── Password Strength Indicator ─────────────────────── */}
+                {formData.password.length > 0 && (() => {
+                  const pwd = formData.password;
+                  const score = [
+                    pwd.length >= 8,
+                    /[A-Z]/.test(pwd),
+                    /[a-z]/.test(pwd),
+                    /[0-9]/.test(pwd),
+                    /[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]/.test(pwd),
+                  ].filter(Boolean).length;
 
-                    if (strength > 0) {
-                      if (i === 1) {
-                        if (strength <= 3) color = "bg-red-500";
-                        else if (strength <= 5) color = "bg-amber-500";
-                        else color = "bg-green-500";
-                      } else if (i === 2 && strength >= 4) {
-                        if (strength <= 5) color = "bg-amber-500";
-                        else color = "bg-green-500";
-                      } else if (i === 3 && strength >= 6) {
-                        color = "bg-green-500";
-                      } else if (i === 4 && strength >= 8) {
-                        color = "bg-green-500";
-                      }
-                    }
+                  const segColor = (seg: number) => {
+                    if (score <= 1) return seg === 1 ? 'bg-red-500' : 'bg-zinc-100';
+                    if (score === 2) return seg <= 2 ? 'bg-red-400' : 'bg-zinc-100';
+                    if (score === 3) return seg <= 3 ? 'bg-amber-400' : 'bg-zinc-100';
+                    if (score === 4) return seg <= 4 ? 'bg-amber-500' : 'bg-zinc-100';
+                    return 'bg-green-500';
+                  };
 
-                    return (
-                      <div
-                        key={i}
-                        className={cn(
-                          "flex-1 rounded-full transition-all duration-500",
-                          color
-                        )}
-                      />
-                    );
-                  })}
-                </div>
+                  const label = score <= 2 ? 'Weak' : score <= 4 ? 'Medium' : 'Strong';
+                  const labelColor = score <= 2 ? 'text-red-500' : score <= 4 ? 'text-amber-500' : 'text-green-600';
+
+                  return (
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex gap-1 flex-1 h-1.5">
+                        {[1, 2, 3, 4].map((seg) => (
+                          <div
+                            key={seg}
+                            className={cn('flex-1 rounded-full transition-all duration-500', segColor(seg))}
+                          />
+                        ))}
+                      </div>
+                      <span className={cn('text-[10px] font-black uppercase tracking-widest transition-colors duration-300', labelColor)}>
+                        {label}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Confirm Password */}

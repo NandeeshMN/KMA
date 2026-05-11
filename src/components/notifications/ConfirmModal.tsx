@@ -1,3 +1,4 @@
+import React from 'react';
 import { X, AlertCircle } from 'lucide-react';
 import { useNotification } from '../../utils/NotificationContext';
 

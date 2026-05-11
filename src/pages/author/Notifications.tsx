@@ -1,3 +1,4 @@
+import React from 'react';
 
 import { CheckCircle2, FileEdit, MessageSquare, Info } from 'lucide-react';
 import { cn } from '../../utils/cn';

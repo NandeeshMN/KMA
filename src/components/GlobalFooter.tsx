@@ -1,3 +1,4 @@
+import React from 'react';
 import { Globe, Mail, Users, Info } from 'lucide-react';
 
 interface GlobalFooterProps {
@@ -6,7 +7,7 @@ interface GlobalFooterProps {
 
 const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
   return (
-    <div className="text-white py-12 px-6 border-t border-white/5 mt-auto">
+    <div className="bg-black text-white py-10 px-6 border-t border-white/5 mt-auto">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-8">
           {/* Social Icons (Left) */}

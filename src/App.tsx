@@ -1,3 +1,4 @@
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Auth from './pages/Auth'
 import LandingPage from './pages/LandingPage'

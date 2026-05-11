@@ -23,8 +23,7 @@ const SubmitArticle = () => {
     title: '',
     abstract: '',
     keywords: '',
-    category: '',
-    allowComments: true
+    category: ''
   });
   
   const [file, setFile] = useState<File | null>(null);
@@ -298,28 +297,6 @@ const SubmitArticle = () => {
             </div>
           </div>
 
-          {/* Section 4: Submission Settings */}
-          <div className="bg-zinc-50 rounded-2xl p-6 border border-zinc-100">
-            <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mb-4">Settings</h4>
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <div className="relative flex items-center pt-1">
-                <input 
-                  type="checkbox"
-                  name="allowComments"
-                  checked={formData.allowComments}
-                  onChange={handleInputChange}
-                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 bg-white transition-all checked:bg-black checked:border-black outline-none"
-                />
-                <CheckCircle2 className="absolute h-5 w-5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity p-0.5" />
-              </div>
-              <div>
-                <span className="text-xs font-bold text-black block mb-1">Allow Internal Comments</span>
-                <p className="text-[10px] text-zinc-500 leading-relaxed">
-                  Allow reviewers to add comments inside the document for collaborative peer-review.
-                </p>
-              </div>
-            </label>
-          </div>
 
           {/* Section 5: Action Buttons */}
           <div className="space-y-3 pt-4">

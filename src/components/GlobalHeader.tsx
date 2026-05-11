@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, Camera, Edit3, X, User } from 'lucide-react';
 import logo from '../assets/logo.png';
 import ProfileModal from './ProfileModal';
+import PhotoActionModal from './PhotoActionModal';
 import { useProfile } from '../hooks/useProfile';
+import { useNotification } from '../utils/NotificationContext';
 
 interface GlobalHeaderProps {
   onMenuClick: () => void;
@@ -21,9 +23,11 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
   showProfile = true 
 }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isPhotoOpen, setIsPhotoOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const { profile, updateProfile } = useProfile();
+  const { showToast } = useNotification();
 
-  // Use the profile data from hook if available, fallback to props
   const displayName = profile?.name || userName || 'User';
   const displayInitials = profile?.name 
     ? profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -45,48 +49,110 @@ const GlobalHeader: React.FC<GlobalHeaderProps> = ({
           </div>
         </div>
 
-        {/* 2. Title (Compact) */}
+        {/* 2. Title */}
         <div className="flex-1 px-4 relative z-10 overflow-hidden">
           <h2 className="text-lg lg:text-xl font-bold tracking-tight text-black font-['Outfit'] truncate">
             Kerala Mathematical Association
           </h2>
         </div>
 
-        {/* 3. Right Actions (Search + Profile) */}
+        {/* 3. Right Actions */}
         <div className="flex items-center gap-4 relative z-10 shrink-0">
           <div className="hidden sm:block">
             {rightActions}
           </div>
           
-          {/* User Profile - Compact */}
+          {/* User Profile Avatar + Dropdown */}
           {showProfile && (
-            <button 
-              onClick={() => setIsProfileOpen(true)}
-              className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full bg-zinc-50 border border-zinc-100 hover:bg-zinc-100 transition-all group"
-            >
-              <div className="hidden md:block text-right">
-                <p className="text-[10px] font-bold text-black leading-none">{displayName}</p>
-                <p className="text-[7px] text-zinc-400 font-bold tracking-wider mt-0.5 uppercase">
-                  {profile?.role || 'PORTAL'}
-                </p>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
-                {profile?.profileImage ? (
-                  <img src={profile.profileImage} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  displayInitials
-                )}
-              </div>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full bg-zinc-50 border border-zinc-100 hover:bg-zinc-100 transition-all group"
+              >
+                <div className="hidden md:block text-right">
+                  <p className="text-[10px] font-bold text-black leading-none">{displayName}</p>
+                  <p className="text-[7px] text-zinc-400 font-bold tracking-wider mt-0.5 uppercase">
+                    {profile?.role || 'PORTAL'}
+                  </p>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+                  {profile?.profileImage ? (
+                    <img src={profile.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    displayInitials
+                  )}
+                </div>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-[30]"
+                    onClick={() => setShowDropdown(false)}
+                  />
+                  <div className="absolute right-0 top-12 w-52 bg-white border border-zinc-100 rounded-2xl shadow-2xl py-2 z-[40] animate-in slide-in-from-top-2 duration-200">
+                    {/* User info header */}
+                    <div className="px-4 py-3 border-b border-zinc-100 mb-1">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-bold text-[10px] overflow-hidden shrink-0">
+                          {profile?.profileImage ? (
+                            <img src={profile.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                          ) : displayInitials}
+                        </div>
+                        <div className="overflow-hidden">
+                          <p className="text-sm font-bold text-black truncate">{displayName}</p>
+                          <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider">{profile?.role}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => { setIsPhotoOpen(true); setShowDropdown(false); }}
+                      className="w-full px-4 py-3 text-left text-sm font-bold text-zinc-600 hover:text-black hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                    >
+                      <Camera size={16} className="text-zinc-400" />
+                      Change Photo
+                    </button>
+
+                    <button
+                      onClick={() => { setIsProfileOpen(true); setShowDropdown(false); }}
+                      className="w-full px-4 py-3 text-left text-sm font-bold text-zinc-600 hover:text-black hover:bg-zinc-50 flex items-center gap-3 transition-colors"
+                    >
+                      <Edit3 size={16} className="text-zinc-400" />
+                      Edit Details
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
       </header>
 
+      {/* Edit Details Modal */}
       <ProfileModal 
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
         profile={profile}
         onSave={updateProfile}
+      />
+
+      {/* Change Photo Modal */}
+      <PhotoActionModal
+        isOpen={isPhotoOpen}
+        onClose={() => setIsPhotoOpen(false)}
+        currentImage={profile?.profileImage || null}
+        onUpdate={async (newImage) => {
+          if (profile) {
+            const result = await updateProfile({ ...profile, profileImage: newImage });
+            if (result.success) {
+              showToast(newImage ? 'Profile photo updated' : 'Photo removed successfully', 'success');
+            } else {
+              showToast(result.error || 'Failed to update photo', 'error');
+            }
+          }
+        }}
       />
     </>
   );

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { 
   User, 
@@ -13,10 +14,14 @@ import {
 import { useProfile } from '../../hooks/useProfile';
 import { cn } from '../../utils/cn';
 import ProfileModal from '../../components/ProfileModal';
+import PhotoActionModal from '../../components/PhotoActionModal';
+import { useNotification } from '../../utils/NotificationContext';
 
 const ReaderProfile = () => {
   const { profile, updateProfile } = useProfile();
+  const { showToast } = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in duration-700">
@@ -38,8 +43,9 @@ const ReaderProfile = () => {
                 )}
               </div>
               <button 
-                onClick={() => setIsModalOpen(true)}
-                className="absolute bottom-2 right-2 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow-xl hover:bg-zinc-200 transition-all active:scale-90 border-4 border-black"
+                onClick={() => setIsPhotoModalOpen(true)}
+                className="absolute bottom-2 right-2 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow-xl hover:bg-zinc-200 transition-all active:scale-90 border-4 border-black z-20"
+                title="Change Profile Photo"
               >
                 <Camera size={18} />
               </button>
@@ -141,6 +147,22 @@ const ReaderProfile = () => {
         onClose={() => setIsModalOpen(false)}
         profile={profile}
         onSave={updateProfile}
+      />
+
+      <PhotoActionModal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        currentImage={profile?.profileImage || null}
+        onUpdate={async (newImage) => {
+          if (profile) {
+            const result = await updateProfile({ ...profile, profileImage: newImage });
+            if (result.success) {
+              showToast(newImage ? 'Profile photo updated' : 'Photo removed successfully', 'success');
+            } else {
+              showToast(result.error || 'Failed to update photo', 'error');
+            }
+          }
+        }}
       />
     </div>
   );

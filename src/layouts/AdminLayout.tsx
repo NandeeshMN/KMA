@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Outlet, NavLink, useNavigate, Navigate } from 'react-router-dom';
 import { LayoutDashboard, Users, FileText, LogOut, X, Search, HelpCircle, User } from 'lucide-react';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Globe, Mail, Users, Info } from 'lucide-react';
 
 interface GlobalFooterProps {
@@ -7,7 +6,7 @@ interface GlobalFooterProps {
 
 const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
   return (
-    <footer className="bg-black text-white py-8 px-6 border-t border-white/5 mt-auto">
+    <div className="text-white py-12 px-6 border-t border-white/5 mt-auto">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-8">
           {/* Social Icons (Left) */}
@@ -29,24 +28,8 @@ const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
           </div>
 
           {/* Copyright (Center) */}
-          <div className="text-center space-y-6">
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
-              {[
-                'About Us',
-                'Contact Us',
-                'Privacy Policy',
-                'Terms & Conditions',
-                'Refund/Cancellation Policy'
-              ].map((link, idx, arr) => (
-                <React.Fragment key={link}>
-                  <button className="text-[8px] font-black text-zinc-500 hover:text-white uppercase tracking-[0.15em] transition-all duration-300">
-                    {link}
-                  </button>
-                  {idx < arr.length - 1 && <span className="text-zinc-800 text-[8px]">•</span>}
-                </React.Fragment>
-              ))}
-            </div>
-            <p className="text-[9px] text-zinc-600 uppercase font-black tracking-[0.2em] opacity-50">
+          <div className="text-center">
+            <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-[0.1em]">
               © 2024 KERALA MATHEMATICAL ASSOCIATION. ALL RIGHTS RESERVED.
             </p>
           </div>
@@ -79,7 +62,7 @@ const GlobalFooter = ({ showSocials = false }: GlobalFooterProps) => {
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 

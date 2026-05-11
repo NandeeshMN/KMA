@@ -472,18 +472,18 @@ const LandingPage: React.FC = () => {
 
             <div className="space-y-6">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Platform</h4>
-              <ul className="space-y-3">
+              <div className="flex flex-col gap-3">
                 {['Archives', 'Submit Paper', 'Reviewers', 'Membership', 'Pricing'].map(link => (
-                  <li key={link}>
-                    <button className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">{link}</button>
-                  </li>
+                  <button key={link} className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors text-left w-fit">
+                    {link}
+                  </button>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div className="space-y-6">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Legal</h4>
-              <ul className="space-y-3">
+              <div className="flex flex-col gap-3">
                 {[
                   'About Us',
                   'Contact Us',
@@ -491,20 +491,20 @@ const LandingPage: React.FC = () => {
                   'Terms & Conditions',
                   'Refund/Cancellation Policy'
                 ].map(link => (
-                  <li key={link}>
-                    <button className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">{link}</button>
-                  </li>
+                  <button key={link} className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors text-left w-fit">
+                    {link}
+                  </button>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div className="space-y-6">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Contact</h4>
-              <p className="text-[10px] font-bold text-zinc-400 leading-relaxed">
-                KMA Research Center<br />
-                Trivandrum, Kerala, India<br />
-                support@kma.org.in
-              </p>
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-zinc-400 leading-relaxed uppercase tracking-wider">KMA Research Center</p>
+                <p className="text-[10px] font-medium text-zinc-500 leading-relaxed">Trivandrum, Kerala, India</p>
+                <p className="text-[10px] font-bold text-zinc-300 tracking-widest">support@kma.org.in</p>
+              </div>
             </div>
           </div>
           <GlobalFooter showSocials={true} />
